@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>blue-barricade</title>
+  </head>
+  <body>
+    <script src="./dist/blue-barricade.js"></script>
+    <script>
+      const model = {
+        user: {
+          name: `blue`
+        }
+      };
+
+      const barricade = new BlueBarricade({
+        model
+      });
+
+      BlueBarricade.addRule('a-start', {
+        rule: function (value) {
+          return /^a/.test(value)
+        },
+        message: `名字a开头`
+      });
+
+      const rules = [{
+        prop: `user.name`,
+        rules: [{
+          rule: /\S+/,
+          message: `请输入名字`
+        }, {
+          rule: 'a-start',
+          message(value) {
+            return `值不能为${value}`
+          }
+        }],
+        required: true
+      }];
+
+      barricade.validate(rules).then((res) => {
+        if (res.status) {
+          return console.log(`验证成功`);
+        }
+        return console.log(`验证失败`, res.errorMessage);
+      });
+    </script>
+  </body>
+</html>
