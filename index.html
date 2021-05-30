@@ -1,49 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <title>blue-barricade</title>
-  </head>
-  <body>
-    <script src="./dist/blue-barricade.js"></script>
-    <script>
-      const model = {
-        user: {
-          name: `blue`
-        }
-      };
+	<head>
+		<meta charset="UTF-8">
+		<title>blue-barricade</title>
+	</head>
+	<body>
+		<script src="./dist/blue-barricade.js"></script>
+		<script>
 
-      const barricade = new BlueBarricade({
-        model
-      });
+			const barricade = new BlueBarricade({
+				hooks: {
+					error(res) {
+						console.log(res);
+					}
+				}
+			});
 
-      BlueBarricade.addRule('a-start', {
-        rule: function (value) {
-          return /^a/.test(value)
-        },
-        message: `名字a开头`
-      });
+			//添加全局规则
+			BlueBarricade.addRule('a-start', {
+				rule: function (value) {
+					return /^a/.test(value)
+				},
+				message: `名字a开头`
+			});
 
-      const rules = [{
-        prop: `user.name`,
-        rules: [{
-          rule: /\S+/,
-          message: `请输入名字`
-        }, {
-          rule: 'a-start',
-          message(value) {
-            return `值不能为${value}`
-          }
-        }],
-        required: true
-      }];
+			const model = {
+				user: {
+					list: [{
+						a: [1, `aa2`, `asdasdjlk`]
+					}]
+				}
+			};
 
-      barricade.validate(rules).then((res) => {
-        if (res.status) {
-          return console.log(`验证成功`);
-        }
-        return console.log(`验证失败`, res.errorMessage);
-      });
-    </script>
-  </body>
+			barricade.validate({
+				model,
+				rules: [/*{
+				prop: `user.name`,
+				rules: [{
+					rule: /\S+/,
+					message: `请输入名字`
+				}, {
+					rule: 'a-start',
+					message(value) {
+						return `值不能为${value}`
+					}
+				}],
+				required: true
+			}, */...(() => {
+					const rules = []
+					model.user.list.map((item, index) => {
+						return item.a.map((_item, _index) => {
+							rules.push({
+								prop: `user.list.${index}.a.${_index}`,
+								rules: [{
+									rule: `number`,
+									message: `输入的数值有点问题啊`
+								}, {
+									rule: /^\d+$/,
+									message: `输入的数值有点问题啊`
+								}, `number`, `price`]
+							});
+						});
+					});
+					return rules;
+				})()]
+			}).then((res) => {
+				if (res.status) {
+					return console.log(`验证成功`, res.status);
+				}
+				return console.log(`验证失败`, res.errorMessage);
+			});
+		</script>
+	</body>
 </html>
