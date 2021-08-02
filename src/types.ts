@@ -10,7 +10,7 @@ export interface TRuleFunction {
 export interface TBarricadeOptions {
 	hooks?: {
 		//错误的钩子
-		error?: ( result: TValidateResult ) => void;
+		error?: ( result: TValidateResult ) => number;
 	}
 }
 
@@ -46,4 +46,8 @@ export interface TValidateRules {
 	rules: TValidateRule[],
 	//是否必须校验
 	required?: boolean;
+	//是否为迭代器类型
+	isIterator?: boolean;
+	//迭代器索引
+	iteratorIndex: number;
 }

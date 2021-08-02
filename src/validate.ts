@@ -17,9 +17,7 @@ function deepModel ( opts: {
 	const currentProp = splitProp.shift();
 	const currentModel = model[ currentProp ];
 	if (splitProp.length > 0) {
-		if (!(currentModel instanceof Object || currentModel instanceof Array)) {
-			return undefined;
-		}
+		if (!(currentModel instanceof Object || currentModel instanceof Array)) return undefined;
 		return deepModel({
 			model: currentModel,
 			prop: splitProp.join(`.`)
@@ -28,8 +26,17 @@ function deepModel ( opts: {
 	return currentModel;
 }
 
-function getMessage ( message: TRuleMessage, value?: any ) {
-	return utils.hook(null, message, [value]);
+function getMessage ( opts: {
+	message: TRuleMessage;
+	value?: any;
+	prop: string;
+} ) {
+	const {
+		message,
+		value,
+		prop
+	} = opts;
+	return utils.hook(null, message || `validate ${prop} error`, [value]);
 }
 
 //验证规则
@@ -37,8 +44,12 @@ function validateRules ( opts: {
 	prop: string;
 	rules: TValidateRule[];
 	value: any;
+	//是否为迭代器类型
+	isIterator?: boolean;
+	//迭代器索引
+	iteratorIndex?: number;
 } ): string {
-	const {rules, value, prop} = opts;
+	const {rules, value, prop, isIterator, iteratorIndex} = opts;
 	let error = ``;
 	for (const ruleItem of rules) {
 		//如果当前的rules组中已经产生错误了，则跳出
@@ -47,6 +58,28 @@ function validateRules ( opts: {
 		let rule;
 		//错误信息
 		let message;
+
+		//函数类型验证处理
+		const fnValidate = ( ruleFn: Function ): boolean => {
+			//验证结果
+			const validateResult = ruleFn({
+				value,
+				isIterator,
+				iteratorIndex
+			});
+			if (typeof validateResult.status === 'boolean') {
+				const {status, message: validateMessage} = validateResult;
+				if (status === false && validateMessage) {
+					message = validateMessage;
+				} else if (status === true) {
+					return true;
+				}
+			} else if (typeof validateResult === 'boolean' && validateResult) {
+				return true;
+			}
+			return false;
+		};
+
 		if (typeof ruleItem !== 'string') {
 			//设置当前的规则
 			rule = ruleItem.rule;
@@ -56,7 +89,11 @@ function validateRules ( opts: {
 		}
 		if (rule instanceof RegExp) {
 			if (rule.test(value)) continue;
-			error = getMessage(message, value);
+			error = getMessage({
+				message,
+				value,
+				prop
+			});
 		} else if (typeof rule === 'string') {
 			//内置方法
 			const currentRule = $rules[ rule ];
@@ -64,33 +101,121 @@ function validateRules ( opts: {
 			if (!currentRule) throw (`${rule} rule is undefined`);
 			const {rule: $rule, message: $message} = currentRule;
 			if ($rule instanceof RegExp) {
-				if (value === undefined || value === null || $rule.test(value)) continue;
+				if ($rule.test(value)) continue;
 			} else if (typeof $rule === 'function') {
-				if ($rule(value)) continue;
+				if (fnValidate($rule)) continue;
 			} else {
 				console.error(`rule is not RegExp or Function`);
 				continue;
 			}
-			error = getMessage(message || $message || `validate ${prop} error`, value);
+			error = getMessage({
+				message,
+				value,
+				prop
+			});
 		} else if (typeof rule === 'function') {
-			if (rule(value)) continue;
-			error = getMessage(message, value);
+			//验证结果
+			if (fnValidate(rule)) continue;
+			error = getMessage({
+				message,
+				value,
+				prop
+			});
 		}
 	}
 	return error;
 }
 
+const iteratorPlaceholder = `*`;
+
+function genIteratorRules ( opts: {
+	prop: string;
+	model: TValidateModel;
+	rules: TValidateRule[];
+} ): TValidateRules[] {
+	const {prop, model, rules} = opts;
+	const propChars: string[] = prop.split(`.`);
+	if (!propChars.includes(iteratorPlaceholder)) return;
+	const collects: TValidateRules[] = [];
+	propChars.forEach(( char, index ) => {
+		if (char !== iteratorPlaceholder) return;
+		const currentProp = propChars.slice(0, index).join(`.`);
+		const currentValue = deepModel({
+			model,
+			prop: currentProp
+		});
+		//不等于数组，这里直接截止了
+		if (!(currentValue instanceof Array)) return;
+		for (let i = 0; i < currentValue.length; i++) {
+			const footProp = propChars.slice(index + 1).join(`.`) || ``;
+			const resultProp = `${currentProp}.${i}.${footProp}`;
+			if (resultProp.includes(iteratorPlaceholder)) {
+				collects.push(...genIteratorRules({
+					prop: resultProp,
+					model,
+					rules
+				}));
+			} else {
+				collects.push({
+					prop: resultProp,
+					rules,
+					isIterator: true,
+					iteratorIndex: i
+				});
+			}
+		}
+	});
+	return collects;
+}
+
+//在规则中设置迭代器的规则
+function setIteratorRuleInRules ( opts: {
+	rules: TValidateRules[];
+	model: TValidateModel;
+} ) {
+	const {rules, model} = opts;
+	const iteratorRules = {};
+	rules.forEach(( rule, index ) => {
+		const {prop, rules} = rule;
+		if (!prop.includes(iteratorPlaceholder)) return;
+		iteratorRules[ index ] = genIteratorRules({
+			prop,
+			model,
+			rules
+		});
+	});
+	//统计新增的长度
+	let joinCount = 0;
+	for (let index in iteratorRules) {
+		const _index = parseInt(index);
+		const _rules = iteratorRules[ _index ];
+		(_rules || []).forEach(( rule ) => {
+			rules.splice(_index + joinCount, 0, rule);
+			++joinCount;
+		});
+	}
+	//过滤训迭代器相关数据
+	return rules.filter(( rule ) => {
+		return !rule.prop.includes(iteratorPlaceholder);
+	});
+}
+
 //验证器
-export function validate ( opts ): TValidateResult {
-	const {rules, model}: {
-		rules: TValidateRules[];
-		model: TValidateModel;
-	} = opts;
+export function validate ( opts: {
+	rules: TValidateRules[];
+	model: TValidateModel;
+} ): TValidateResult {
+	const {rules, model} = opts;
 	//错误集合`
 	const errors: TErrors[] = [];
 	//错误信息集合
 	const errorsMessage: string[] = [];
-	rules.forEach(( rule ) => {
+	//在规则中设置迭代器的规则
+	const _rules = setIteratorRuleInRules({
+		rules,
+		model
+	});
+	_rules.forEach(( rule ) => {
 		let value;
 		const {prop, rules: fieldRules} = rule;
 		if (isDeepModel(prop)) {

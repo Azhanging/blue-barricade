@@ -4,7 +4,7 @@ export interface TRuleFunction {
 }
 export interface TBarricadeOptions {
     hooks?: {
-        error?: () => number;
+        error?: (result: TValidateResult) => number;
     };
 }
 export interface TErrors {
@@ -28,4 +28,6 @@ export interface TValidateRules {
     prop: string;
     rules: TValidateRule[];
     required?: boolean;
+    isIterator?: boolean;
+    iteratorIndex: number;
 }
