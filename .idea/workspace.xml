@@ -25,7 +25,6 @@
       <change beforePath="$PROJECT_DIR$/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/validate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/validate.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/types/types.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/types.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/validate.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/validate.d.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +52,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../blue-utils" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../blue-electron" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="Settings.Markdown" />
     <property name="ts.external.directory.path" value="D:\Achang\Web\blue-barricade\node_modules\typescript\lib" />
@@ -118,6 +117,8 @@
       <workItem from="1627706809028" duration="12366000" />
       <workItem from="1627781634344" duration="11064000" />
       <workItem from="1627893318458" duration="7881000" />
+      <workItem from="1628318506191" duration="9215000" />
+      <workItem from="1628689236092" duration="5000" />
     </task>
     <servers />
   </component>
@@ -137,34 +138,34 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="645" y="275" key="FileChooserDialogImpl" timestamp="1627799813531">
+    <state x="645" y="275" key="FileChooserDialogImpl" timestamp="1628689239962">
       <screen x="0" y="0" width="1728" height="1040" />
     </state>
-    <state x="645" y="275" key="FileChooserDialogImpl/0.0.1728.1040@0.0.1728.1040" timestamp="1627799813531" />
-    <state width="1707" height="176" key="GridCell.Tab.0.bottom" timestamp="1627900111066">
+    <state x="645" y="275" key="FileChooserDialogImpl/0.0.1728.1040@0.0.1728.1040" timestamp="1628689239962" />
+    <state width="1707" height="176" key="GridCell.Tab.0.bottom" timestamp="1628320350145">
       <screen x="0" y="0" width="1728" height="1040" />
     </state>
-    <state width="1707" height="176" key="GridCell.Tab.0.bottom/0.0.1728.1040@0.0.1728.1040" timestamp="1627900111066" />
-    <state width="1707" height="176" key="GridCell.Tab.0.center" timestamp="1627900111066">
+    <state width="1707" height="176" key="GridCell.Tab.0.bottom/0.0.1728.1040@0.0.1728.1040" timestamp="1628320350145" />
+    <state width="1707" height="176" key="GridCell.Tab.0.center" timestamp="1628320350144">
       <screen x="0" y="0" width="1728" height="1040" />
     </state>
-    <state width="1707" height="176" key="GridCell.Tab.0.center/0.0.1728.1040@0.0.1728.1040" timestamp="1627900111066" />
-    <state width="1707" height="176" key="GridCell.Tab.0.left" timestamp="1627900111066">
+    <state width="1707" height="176" key="GridCell.Tab.0.center/0.0.1728.1040@0.0.1728.1040" timestamp="1628320350144" />
+    <state width="1707" height="176" key="GridCell.Tab.0.left" timestamp="1628320350144">
       <screen x="0" y="0" width="1728" height="1040" />
     </state>
-    <state width="1707" height="176" key="GridCell.Tab.0.left/0.0.1728.1040@0.0.1728.1040" timestamp="1627900111066" />
-    <state width="1707" height="176" key="GridCell.Tab.0.right" timestamp="1627900111066">
+    <state width="1707" height="176" key="GridCell.Tab.0.left/0.0.1728.1040@0.0.1728.1040" timestamp="1628320350144" />
+    <state width="1707" height="176" key="GridCell.Tab.0.right" timestamp="1628320350145">
       <screen x="0" y="0" width="1728" height="1040" />
     </state>
-    <state width="1707" height="176" key="GridCell.Tab.0.right/0.0.1728.1040@0.0.1728.1040" timestamp="1627900111066" />
+    <state width="1707" height="176" key="GridCell.Tab.0.right/0.0.1728.1040@0.0.1728.1040" timestamp="1628320350145" />
     <state x="366" y="165" key="SettingsEditor" timestamp="1622364148344">
       <screen x="0" y="0" width="1728" height="1040" />
     </state>
     <state x="366" y="165" key="SettingsEditor/0.0.1728.1040@0.0.1728.1040" timestamp="1622364148344" />
-    <state x="564" y="252" width="600" height="536" key="find.popup" timestamp="1622350789323">
+    <state x="564" y="252" width="600" height="536" key="find.popup" timestamp="1628319872523">
       <screen x="0" y="0" width="1728" height="1040" />
     </state>
-    <state x="564" y="252" width="600" height="536" key="find.popup/0.0.1728.1040@0.0.1728.1040" timestamp="1622350789323" />
+    <state x="564" y="252" width="600" height="536" key="find.popup/0.0.1728.1040@0.0.1728.1040" timestamp="1628319872523" />
     <state x="521" y="241" key="run.anything.popup" timestamp="1626940507869">
       <screen x="0" y="0" width="1728" height="1040" />
     </state>

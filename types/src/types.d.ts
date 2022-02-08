@@ -24,7 +24,7 @@ export interface TValidateRule {
     rule: string | RegExp | TRuleFunction;
     message?: TRuleMessage;
 }
-export interface TValidateRules {
+export interface TValidations {
     prop: string;
     rules: TValidateRule[];
     required?: boolean;

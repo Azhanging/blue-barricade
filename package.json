@@ -1,6 +1,6 @@
 {
   "name": "blue-barricade",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "blue-barricade",
   "main": "./dist/blue-barricade.js",
   "types": "./types/index.d.ts",
@@ -9,8 +9,8 @@
     "build": "node blue-build-library/build.js"
   },
   "keyword": [
-    "utils",
-    "blue utils"
+    "validate",
+    "data validate"
   ],
   "author": "Blue",
   "license": "ISC",

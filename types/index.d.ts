@@ -1,4 +1,4 @@
-import { TValidateRule, TValidateRules, TValidateResult, TBarricadeOptions } from "./types";
+import { TValidateRule, TValidations, TValidateResult, TBarricadeOptions } from "./types";
 declare class BlueBarricade {
     static addRule(name: string, rule: TValidateRule): void;
     options: TBarricadeOptions;
@@ -7,7 +7,7 @@ declare class BlueBarricade {
         model: {
             [propName: string]: any;
         };
-        rules: TValidateRules[];
+        validations: TValidations[];
     }): Promise<TValidateResult>;
 }
 export default BlueBarricade;

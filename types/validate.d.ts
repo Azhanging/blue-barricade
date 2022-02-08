@@ -1,5 +1,5 @@
-import { TValidateRules, TValidateModel, TValidateResult } from "./types";
+import { TValidations, TValidateModel, TValidateResult } from "./types";
 export declare function validate(opts: {
-    rules: TValidateRules[];
+    validations: TValidations[];
     model: TValidateModel;
 }): TValidateResult;

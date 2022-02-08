@@ -7,11 +7,19 @@ declare const rules: {
         rule: RegExp;
         message: string;
     };
-    price: {
+    money: {
         rule: RegExp;
         message: string;
     };
     number: {
+        rule: RegExp;
+        message: string;
+    };
+    intNumber: {
+        rule: RegExp;
+        message: string;
+    };
+    floatNumber: {
         rule: RegExp;
         message: string;
     };

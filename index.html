@@ -1,82 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>blue-barricade</title>
-	</head>
-	<body>
-		<script src="./dist/blue-barricade.js"></script>
-		<script>
+  <head>
+    <meta charset="UTF-8" />
+    <title>blue-barricade</title>
+  </head>
+  <body>
+    <script src="./dist/blue-barricade.js"></script>
+    <script>
+      const barricade = new BlueBarricade({
+        concatErrorMessage: false,
+        hooks: {
+          error(res) {
+            console.log(res);
+          },
+        },
+      });
 
-			const barricade = new BlueBarricade({
-				hooks: {
-					error(res) {
-						console.log(res);
-					}
-				}
-			});
+      //添加全局规则
+      BlueBarricade.addRule("a-start", {
+        rule: function (value) {
+          return /^a/.test(value);
+        },
+        message: `名字a开头`,
+      });
 
-			//添加全局规则
-			BlueBarricade.addRule('a-start', {
-				rule: function (value) {
-					return /^a/.test(value)
-				},
-				message: `名字a开头`
-			});
+      const model = {
+        user: {
+          list: [
+            {
+              a: [1, `aa2`, `asdasdjlk`],
+            },
+          ],
+          name: NaN,
+        },
+        some: {
+          name: `name`,
+          list: [
+            {
+              name: {
+                some: null,
+              },
+            },
+            {
+              name: {
+                some: [
+                  {
+                    someName: `name`,
+                  },
+                  {
+                    someName: null,
+                  },
+                  {
+                    someName: 12,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      };
 
-			const model = {
-				user: {
-					list: [{
-						a: [1, `aa2`, `asdasdjlk`]
-					}],
-					name: NaN,
-				},
-				some: {
-					name: `name`,
-					list: [{
-						name: {
-							some: null
-						}
-					}, {
-						name: {
-							some: [{
-								someName: `name`
-							}, {
-								someName: null
-							}]
-						}
-					}]
-				}
-			};
-
-			barricade.validate({
-				model,
-				rules: [{
-					prop: `user.name`,
-					rules: [{
-						rule: `number`
-					}],
-					message: `错误了`
-				}, {
-					prop: `some.name`,
-					rules: [{
-						rule: `required`
-					}]
-				}, {
-					prop: `some.list.*.name.some.*.someName`,
-					rules: [{
-						rule(opts) {
-							console.log(opts);
-							return false;
-						}
-					}]
-				}]
-			}).then((res) => {
-				if (res.status) {
-					return console.log(`验证成功`, res.status);
-				}
-				return console.log(`验证失败`, res.errorMessage);
-			});
-		</script>
-	</body>
+      barricade
+        .validate({
+          model,
+          validations: [
+            {
+              prop: `user.name`,
+              rules: [
+                {
+                  rule: `intNumber`,
+                },
+              ],
+              message: `错误了`,
+            },
+            {
+              prop: `some.name`,
+              rules: [
+                {
+                  rule: `required`,
+                },
+              ],
+            },
+            {
+              prop: `some.list.*.name.some.*.someName`,
+              rules: [
+                {
+                  rule(opts) {
+                    console.log(opts);
+                    return false;
+                  },
+                },
+              ],
+            },
+          ],
+        })
+        .then((res) => {
+          if (res.status) {
+            return console.log(`验证成功`, res.status);
+          }
+          return console.log(`验证失败`, res.errorMessage);
+        });
+    </script>
+  </body>
 </html>
